@@ -25,7 +25,6 @@ namespace hobot {
 namespace centerpoint {
 
 using hobot::dnn_node::DNNInput;
-using hobot::dnn_node::DNNResult;
 using hobot::dnn_node::DNNTensor;
 using hobot::dnn_node::Model;
 

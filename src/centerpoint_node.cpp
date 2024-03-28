@@ -173,12 +173,11 @@ void CenterPoint_Node::RunLocalFeedInfer() {
       continue;
     }
 
-    std::vector<std::shared_ptr<hobot::dnn_node::OutputDescription>> output_descs{};
     auto dnn_output = std::make_shared<CenterPointNodeOutput>();
     dnn_output->lidar_files = input.lidar_files;
 
     // 模型推理开始
-    if (Run(input.input_tensors, output_descs, dnn_output, true, -1, -1) < 0) {
+    if (Run(input.input_tensors, dnn_output, true, -1, -1) < 0) {
       RCLCPP_INFO(rclcpp::get_logger("hobot_centerpoint"), "Run infer fail!");
     }
 
