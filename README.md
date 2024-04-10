@@ -17,10 +17,18 @@ This example uses local laser radar point cloud files as input, utilizes BPU for
 
 Run the following commands in the terminal of the RDK system for quick installation:
 
+tros foxy:
 ```bash
 sudo apt update
 sudo apt install -y tros-hobot-centerpoint
 sudo apt install -y tros-websocket
+```
+
+tros humble:
+```bash
+sudo apt update
+sudo apt install -y tros-humble-hobot-centerpoint
+sudo apt install -y tros-humble-websocket
 ```
 
 ## Prepare the Back-Injection Dataset
@@ -41,6 +49,7 @@ tar -zxvf hobot_centerpoint_data.tar.gz -C config
 
 Run the following commands in the terminal of the RDK system to start the algorithm and visualization:
 
+tros foxy:
 ```shell
 # Configure the tros.b environment
 source /opt/tros/setup.bash
@@ -51,6 +60,19 @@ ros2 launch websocket websocket_service.launch.py
 # Launch the file
 ros2 launch hobot_centerpoint hobot_centerpoint_websocket.launch.py lidar_pre_path:=config/hobot_centerpoint_data
 ``````
+
+tros humble:
+```shell
+# Configure the tros.b humble environment
+source /opt/tros/humble/setup.bash
+
+# Start the websocket service
+ros2 launch websocket websocket_service.launch.py
+
+# Launch the file
+ros2 launch hobot_centerpoint hobot_centerpoint_websocket.launch.py lidar_pre_path:=config/hobot_centerpoint_data
+``````
+
 After successful startup, open the browser on the same network computer and access the IP address of RDK http://IP:8000 (IP is the IP address of RDK), you can see the real-time visual effect of the algorithm:
 
 ![centerpoint](img/centerpoint.gif)

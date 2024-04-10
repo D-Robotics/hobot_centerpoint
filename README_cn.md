@@ -17,10 +17,18 @@
 
 在RDK系统的终端中运行如下指令，即可快速安装：
 
+tros foxy 版本
 ```bash
 sudo apt update
 sudo apt install -y tros-hobot-centerpoint
 sudo apt install -y tros-websocket
+```
+
+tros humble 版本
+```bash
+sudo apt update
+sudo apt install -y tros-humble-hobot-centerpoint
+sudo apt install -y tros-humble-websocket
 ```
 
 ## 准备回灌数据集
@@ -41,9 +49,22 @@ tar -zxvf hobot_centerpoint_data.tar.gz -C config
 
 在RDK系统的终端中运行如下指令，启动算法和可视化：
 
+tros foxy 版本
 ```shell
 # 配置tros.b环境
 source /opt/tros/setup.bash
+
+# 启动websocket服务
+ros2 launch websocket websocket_service.launch.py
+
+# 启动launch文件
+ros2 launch hobot_centerpoint hobot_centerpoint_websocket.launch.py lidar_pre_path:=config/hobot_centerpoint_data
+```
+
+tros humble 版本
+```shell
+# 配置tros.b humble环境
+source /opt/tros/humble/setup.bash
 
 # 启动websocket服务
 ros2 launch websocket websocket_service.launch.py
