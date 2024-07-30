@@ -4,7 +4,7 @@
   <name>hobot_centerpoint</name>
   <version>2.0.1</version>
   <description>TODO: Package description</description>
-  <maintainer email="zhenwei.liu@horizon.ai">zhenwei.liu</maintainer>
+  <maintainer email="zhenwei.liu@d-robotics.cc">zhenwei.liu</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
