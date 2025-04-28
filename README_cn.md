@@ -81,7 +81,18 @@ ros2 launch hobot_centerpoint hobot_centerpoint.launch.py
 
 # 常见问题
 
-1. 控制回灌速度。
+通过设置运行时配置文件中的参数，用户可以修改回灌流程和感知结果的输出。
+
+1. 获取运行时配置文件路径。
+
+  在RDK上，使用如下命令查询运行时配置文件路径为：
+
+  ```shell
+    source /opt/tros/humble/setup.bash
+    ls `ros2 pkg prefix hobot_centerpoint`/lib/hobot_centerpoint/config/centerpoint_pointpillar_nuscenes/workflow_latency.json
+  ```
+
+2. 控制回灌速度。
 
   `time_diff_ms表示每次回灌的间隔时间，单位为毫秒。默认为200毫秒，即每200毫秒回灌一次数据。
 

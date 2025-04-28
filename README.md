@@ -79,3 +79,20 @@ After successful startup, open the browser on the same network computer and acce
 | save_image               | "True"/"False", default is "False" | Save the rendered image to the path "./render".                    |
 
 # FAQ
+
+1. Obtain the path of the runtime configuration file.
+
+On the RDK, use the following commands to query the path of the runtime configuration file:
+
+```shell
+    source /opt/tros/humble/setup.bash
+    ls `ros2 pkg prefix hobot_centerpoint`/lib/hobot_centerpoint/config/centerpoint_pointpillar_nuscenes/workflow_latency.json
+```
+
+2. Control the backfilling speed.
+
+`time_diff_ms` represents the interval time for each backfilling, and the unit is milliseconds. The default value is 200 milliseconds, that is, data is backfilled every 200 milliseconds.
+
+```json
+    "time_diff_ms": 200
+```
