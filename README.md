@@ -59,7 +59,7 @@ ln -s ~/centerpoint_data centerpoint_data
 ros2 launch hobot_centerpoint hobot_centerpoint.launch.py
 ```
 
-After successful startup, open the browser on the same network computer and access the IP address of RDK http://IP:8000 (IP is the IP address of RDK), you can see the real-time visual effect of the algorithm:
+After successful startup, open the browser on the same network computer and access the IP address of RDK `http://IP:8000` (IP is the IP address of RDK), you can see the real-time visual effect of the algorithm:
 
 ![centerpoint](img/centerpoint.gif)
 

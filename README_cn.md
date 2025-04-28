@@ -60,7 +60,7 @@ ln -s ~/centerpoint_data centerpoint_data
 ros2 launch hobot_centerpoint hobot_centerpoint.launch.py
 ```
 
-启动成功后，打开同一网络电脑的浏览器，访问RDK的IP地址http://IP:8000（IP为RDK的IP地址），即可看到算法可视化的实时效果：
+启动成功后，打开同一网络电脑的浏览器，访问RDK的IP地址`http://IP:8000`（IP为RDK的IP地址），即可看到算法可视化的实时效果：
 
 ![centerpoint](img/centerpoint.gif)
 
