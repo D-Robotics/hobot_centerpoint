@@ -8,6 +8,13 @@ The algorithm takes 32-line laser radar point cloud data as input and outputs in
 
 This example uses local laser radar point cloud files as input, utilizes BPU for algorithm inference, and publishes rendered images containing point cloud data, target detection boxes, and orientation messages, displaying algorithm results on the PC browser.
 
+# Supported Platforms
+
+| Platform                         | System                               |
+| ---------------------------- | --------------------------------------------- |
+| RDK Ultra               | Ubuntu 20.04 (Foxy) |
+| RDK S100               | Ubuntu 22.04 (Humble) |
+
 # Bill of Materials
 
 
@@ -17,14 +24,6 @@ This example uses local laser radar point cloud files as input, utilizes BPU for
 
 Run the following commands in the terminal of the RDK system for quick installation:
 
-tros foxy:
-```bash
-sudo apt update
-sudo apt install -y tros-hobot-centerpoint
-sudo apt install -y tros-websocket
-```
-
-tros humble:
 ```bash
 sudo apt update
 sudo apt install -y tros-humble-hobot-centerpoint
@@ -37,41 +36,28 @@ Run the following commands in the terminal of the RDK system to download and unz
 
 ```shell
 # Download the point cloud file for back-injection on the board side
-wget http://archive.d-robotics.cc/tros/data/hobot_centerpoint_data.tar.gz
+cd ~
+wget http://sunrise.horizon.cc/TogetheROS/data/hobot_centerpoint_data.tar.gz
 
 # Unzip
-mkdir config
-tar -zxvf hobot_centerpoint_data.tar.gz -C config
-# After unzipping, the data is located in the config/hobot_centerpoint_data path
+mkdir -p ~/centerpoint_data
+tar -zxvf ~/hobot_centerpoint_data.tar.gz -C ~/centerpoint_data
 ```
 
 ## Start the Algorithm and Image Visualization
 
 Run the following commands in the terminal of the RDK system to start the algorithm and visualization:
 
-tros foxy:
-```shell
-# Configure the tros.b environment
-source /opt/tros/setup.bash
-
-# Start the websocket service
-ros2 launch websocket websocket_service.launch.py
-
-# Launch the file
-ros2 launch hobot_centerpoint hobot_centerpoint_websocket.launch.py lidar_pre_path:=config/hobot_centerpoint_data
-``````
-
-tros humble:
 ```shell
 # Configure the tros.b humble environment
 source /opt/tros/humble/setup.bash
 
-# Start the websocket service
-ros2 launch websocket websocket_service.launch.py
-
 # Launch the file
-ros2 launch hobot_centerpoint hobot_centerpoint_websocket.launch.py lidar_pre_path:=config/hobot_centerpoint_data
-``````
+ln -s `ros2 pkg prefix hobot_centerpoint`/lib/qat/ qat
+ln -s ~/centerpoint_data centerpoint_data
+
+ros2 launch hobot_centerpoint hobot_centerpoint.launch.py
+```
 
 After successful startup, open the browser on the same network computer and access the IP address of RDK http://IP:8000 (IP is the IP address of RDK), you can see the real-time visual effect of the algorithm:
 
@@ -84,14 +70,12 @@ After successful startup, open the browser on the same network computer and acce
 
 | Name              | Message Type                       | Description                              |
 | ----------------- | ---------------------------------- | ---------------------------------------- |
-| /hobot_centerpoint  | sensor_msgs/msg/Image               | Periodically publishes image topics in jpeg format  |
+| /image_jpeg  | sensor_msgs/msg/Image               | Periodically publishes image topics in jpeg format  |
 
 ## Parameters
 
-| Name                          | Parameter Value                                | Description                                     |
-| ----------------------------- | ---------------------------------------------- | ------------------------------------------------ |
-| lidar_pre_path                 | The actual path of the playback dataset used, default is ./config/hobot_centerpoint_data | Playback dataset path                |
-| lidar_list_file                 | The actual file name of the playback dataset used, default is ./config/nuscenes_lidar_val.lst | Playback data list                 |
-| is_loop                 | True (default)/False | Whether to publish the rendered image                 |
+| Name                         | Parameter Value                               | Description                                 |
+| ---------------------------- | --------------------------------------------- | ------------------------------------------- |
+| save_image               | "True"/"False", default is "False" | Save the rendered image to the path "./render".                    |
 
 # FAQ

@@ -8,6 +8,13 @@
 
 此示例使用本地激光雷达点云文件作为输入，利用BPU进行算法推理，发布包含点云数据、目标检测框和朝向的渲染图片消息，在PC端浏览器上渲染显示算法结果。
 
+# 支持平台
+
+| 平台                         | 系统                               |
+| ---------------------------- | --------------------------------------------- |
+| RDK Ultra               | Ubuntu 20.04 (Foxy) |
+| RDK S100               | Ubuntu 22.04 (Humble) |
+
 # 物料清单
 
 
@@ -17,14 +24,6 @@
 
 在RDK系统的终端中运行如下指令，即可快速安装：
 
-tros foxy 版本
-```bash
-sudo apt update
-sudo apt install -y tros-hobot-centerpoint
-sudo apt install -y tros-websocket
-```
-
-tros humble 版本
 ```bash
 sudo apt update
 sudo apt install -y tros-humble-hobot-centerpoint
@@ -37,40 +36,28 @@ sudo apt install -y tros-humble-websocket
 
 ```shell
 # 板端下载回灌的点云文件
+cd ~
 wget http://sunrise.horizon.cc/TogetheROS/data/hobot_centerpoint_data.tar.gz
 
 # 解压缩
-mkdir config
-tar -zxvf hobot_centerpoint_data.tar.gz -C config
-# 解压完成后数据在config/hobot_centerpoint_data路径下
+mkdir -p ~/centerpoint_data
+tar -zxvf ~/hobot_centerpoint_data.tar.gz -C ~/centerpoint_data
 ```
 
 ## 启动算法和图像可视化
 
 在RDK系统的终端中运行如下指令，启动算法和可视化：
 
-tros foxy 版本
-```shell
-# 配置tros.b环境
-source /opt/tros/setup.bash
-
-# 启动websocket服务
-ros2 launch websocket websocket_service.launch.py
-
-# 启动launch文件
-ros2 launch hobot_centerpoint hobot_centerpoint_websocket.launch.py lidar_pre_path:=config/hobot_centerpoint_data
-```
-
-tros humble 版本
 ```shell
 # 配置tros.b humble环境
 source /opt/tros/humble/setup.bash
 
-# 启动websocket服务
-ros2 launch websocket websocket_service.launch.py
+# 启动运行脚本
+ln -s `ros2 pkg prefix hobot_centerpoint`/lib/qat/ qat
+ln -s ~/centerpoint_data centerpoint_data
 
 # 启动launch文件
-ros2 launch hobot_centerpoint hobot_centerpoint_websocket.launch.py lidar_pre_path:=config/hobot_centerpoint_data
+ros2 launch hobot_centerpoint hobot_centerpoint.launch.py
 ```
 
 启动成功后，打开同一网络电脑的浏览器，访问RDK的IP地址http://IP:8000（IP为RDK的IP地址），即可看到算法可视化的实时效果：
@@ -84,14 +71,20 @@ ros2 launch hobot_centerpoint hobot_centerpoint_websocket.launch.py lidar_pre_pa
 
 | 名称         | 消息类型                             | 说明                                     |
 | ------------ | ------------------------------------ | ---------------------------------------- |
-| /hobot_centerpoint  | sensor_msgs/msg/Image                | 周期发布的图像话题，jpeg格式             |
+| /image_jpeg  | sensor_msgs/msg/Image                | 周期发布的图像话题，jpeg格式             |
 
 ## 参数
 
 | 名称                         | 参数值                                          | 说明                                               |
 | ---------------------------- | ----------------------------------------------- | -------------------------------------------------- |
-| lidar_pre_path                 | 使用回灌数据集实际所在路径，默认./config/hobot_centerpoint_data | 回灌数据集路径                         |
-| lidar_list_file                 | 使用回灌数据集实际文件名，默认./config/nuscenes_lidar_val.lst | 回灌数据列表                         |
-| is_loop                 | True（默认）/False | 是否发布渲染后图片                         |
+| save_image               | "True"/"False", 默认为"False" | 将渲染后的图像保存到"./render"路径                    |
 
 # 常见问题
+
+1. 控制回灌速度。
+
+  `time_diff_ms表示每次回灌的间隔时间，单位为毫秒。默认为200毫秒，即每200毫秒回灌一次数据。
+
+  ```json
+    "time_diff_ms": 200
+  ```
