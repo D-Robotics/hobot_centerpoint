@@ -53,6 +53,7 @@ Run the following commands in the terminal of the RDK system to start the algori
 source /opt/tros/humble/setup.bash
 
 # Launch the file
+if [ -L qat ]; then rm qat; fi
 ln -s `ros2 pkg prefix hobot_centerpoint`/lib/qat/ qat
 ln -s ~/centerpoint_data centerpoint_data
 
