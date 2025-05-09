@@ -54,7 +54,7 @@ source /opt/tros/humble/setup.bash
 
 # Launch the file
 if [ -L qat ]; then rm qat; fi
-ln -s `ros2 pkg prefix hobot_centerpoint`/lib/qat/ qat
+ln -s `ros2 pkg prefix hobot_centerpoint`/lib/hobot_centerpoint/qat/ qat
 ln -s ~/centerpoint_data centerpoint_data
 
 ros2 launch hobot_centerpoint hobot_centerpoint.launch.py
