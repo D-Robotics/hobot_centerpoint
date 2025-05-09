@@ -86,7 +86,7 @@ install(DIRECTORY
 
 install(DIRECTORY
   ${PROJECT_SOURCE_DIR}/deps_aarch64/tros_ai_wrapper/lib/
-  DESTINATION lib/
+  DESTINATION lib/${PROJECT_NAME}/
 )
 
 install(DIRECTORY
