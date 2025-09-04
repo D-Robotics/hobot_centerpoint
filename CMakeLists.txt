@@ -26,7 +26,7 @@ include_directories(
 )
 
 link_directories(
-  /usr/hobot/lib/
+  ${CMAKE_SYSROOT}/usr/hobot/lib/
   ${CMAKE_CURRENT_SOURCE_DIR}/deps_aarch64/tros_ai_wrapper/lib/
 )
 
