@@ -6,28 +6,29 @@
       "unique_name": "QATCenterPointPreProcessMethod",
       "method_config": "../../config/preprocess/centerpoint_preprocess_5dim.json"
     },
-    "image_list_file": "../../../mini_data/nuscenes_lidar/nuscenes_lidar.lst",
+    "image_list_file": "centerpoint_data/hobot_centerpoint_data/nuscenes_lidar_val.lst",
     "need_pre_load": false,
     "limit": 12,
-    "need_loop": false,
+    "need_loop": true,
     "max_cache": 10
   },
   "output_config": {
     "output_type": "image",
-    "enable_view_output": true,
+    "enable_view_output": false,
     "view_output_dir": "./output_dir",
     "enable_image_output_dump": true,
     "image_output_dir": "./output_images",
     "image_list_enable": true,
-    "in_order": true
+    "in_order": false
   },
   "workflow": [
     {
+      "open_lru": true,
       "method_type": "InferMethod",
       "unique_name": "InferMethod",
       "method_config": {
         "core": 0,
-        "model_file": "qat/model/runtime/centerpoint_pointpillar_nuscenes/compile/model.hbm"
+        "model_file": "../../../model/runtime/centerpoint_pointpillar_nuscenes/compile/model.hbm"
       }
     },
     {

@@ -14,6 +14,7 @@ This example uses local laser radar point cloud files as input, utilizes BPU for
 | ---------------------------- | --------------------------------------------- |
 | RDK Ultra               | Ubuntu 20.04 (Foxy) |
 | RDK S100               | Ubuntu 22.04 (Humble) |
+| RDK S600               | Ubuntu 24.04 (Jazzy) |
 
 # Bill of Materials
 

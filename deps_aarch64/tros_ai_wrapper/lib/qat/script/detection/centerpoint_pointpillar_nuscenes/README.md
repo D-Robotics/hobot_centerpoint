@@ -34,13 +34,15 @@ Example of centerpoint_pointpillar preprocess configuration file.
 ```
 
 To make running preprocess on dsp, you must deploy dsp to development board
-correctly. A deployment script which is located in `dsp_image` is provided for
-deploying dsp easily.
+correctly. A deployment script which is located in `../../../script/` is
+provided for deploying dsp easily.
 
 ```bash
 # deploy dsp image to development board
-cd dsp_image
-bash deploy_dsp.sh
+cd ../../../script/
+
+# use -p to specify the platform, such as S100, S600.
+bash dsp_deploy.sh -p S100
 ```
 
 DSP supports running in two modes: direct mode and relay mode. By default, the
