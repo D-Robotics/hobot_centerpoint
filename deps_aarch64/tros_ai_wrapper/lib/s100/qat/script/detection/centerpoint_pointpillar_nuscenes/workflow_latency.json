@@ -1,0 +1,64 @@
+{
+  "input_config": {
+    "input_type": "raw_data",
+    "preprocess": {
+      "method_type": "QATCenterPointPreProcessMethod",
+      "unique_name": "QATCenterPointPreProcessMethod",
+      "method_config": "../../config/preprocess/centerpoint_preprocess_5dim.json"
+    },
+    "image_list_file": "../../../mini_data/nuscenes_lidar/nuscenes_lidar.lst",
+    "need_pre_load": false,
+    "limit": 12,
+    "need_loop": false,
+    "max_cache": 10
+  },
+  "output_config": {
+    "output_type": "image",
+    "enable_view_output": true,
+    "view_output_dir": "./output_dir",
+    "enable_image_output_dump": true,
+    "image_output_dir": "./output_images",
+    "image_list_enable": true,
+    "in_order": true
+  },
+  "workflow": [
+    {
+      "method_type": "InferMethod",
+      "unique_name": "InferMethod",
+      "method_config": {
+        "core": 0,
+        "model_file": "qat/model/runtime/centerpoint_pointpillar_nuscenes/compile/model.hbm"
+      }
+    },
+    {
+      "thread_count": 1,
+      "method_type": "QATCenterPointPostProcessMethod",
+      "unique_name": "QATCenterPointPostProcessMethod",
+      "method_config": {
+        "norm_bbox": true,
+        "topk": 100,
+        "out_size_factor": 4,
+        "score_threshold": 0.1,
+        "nms_thr": 0.2,
+        "pre_max_size": 1000,
+        "post_max_size": 83,
+        "pc_range": [
+          -51.2,
+          -51.2
+        ],
+        "voxel_size": [
+          0.2,
+          0.2
+        ],
+        "post_center_range": [
+          -61.2,
+          -61.2,
+          -10.0,
+          61.2,
+          61.2,
+          10.0
+        ]
+      }
+    }
+  ]
+}
