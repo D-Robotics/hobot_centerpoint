@@ -1,6 +1,11 @@
 # Changelog for package hobot_centerpoint
 
 
+tros_2.0.4 (2026-01-29)
+------------------
+1. 代码重构，支持`RDK S100/S600`平台。
+2. 升级`libtros_ai_wrapper.so`依赖库，依赖的OE版本为`v3.7.0`。
+
 tros_2.0.3 (2025-06-23)
 ------------------
 1. 升级`libtros_ai_wrapper.so`依赖库，依赖的系统版本由`4.0.0`升级到`4.0.2`。
