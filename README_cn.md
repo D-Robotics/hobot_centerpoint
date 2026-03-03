@@ -38,7 +38,7 @@ sudo apt install -y tros-humble-websocket
 ```shell
 # 板端下载回灌的点云文件
 cd ~
-wget http://sunrise.horizon.cc/TogetheROS/data/hobot_centerpoint_data.tar.gz
+wget http://archive.d-robotics.cc/TogetheROS/data/hobot_centerpoint_data.tar.gz
 
 # 解压缩
 mkdir -p ~/centerpoint_data

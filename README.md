@@ -38,7 +38,7 @@ Run the following commands in the terminal of the RDK system to download and unz
 ```shell
 # Download the point cloud file for back-injection on the board side
 cd ~
-wget http://sunrise.horizon.cc/TogetheROS/data/hobot_centerpoint_data.tar.gz
+wget http://archive.d-robotics.cc/TogetheROS/data/hobot_centerpoint_data.tar.gz
 
 # Unzip
 mkdir -p ~/centerpoint_data
