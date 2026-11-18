@@ -25,6 +25,16 @@ struct FrameInfo {
   uint64_t pre_duration;
 };
 
+// SDK 扩展: 解码后的 3D 检测框 (CenterPoint 等 lidar 模型)
+// x,y,z 为框底面中心; w,l,h 为尺寸; yaw 绕 z; label 为类别 id
+struct DetBox3D {
+  float x, y, z;
+  float w, l, h;
+  float yaw;
+  float score;
+  int label;
+};
+
 class AIWrapper {
 public:
   AIWrapper();
@@ -37,6 +47,9 @@ public:
   void Start();
   void Stop();
 
+  // 扩展版回调: imgs 为渲染图, boxes 为结构化检测结果
   void SetOutputCallback(
-    std::function<void(const std::vector<cv::Mat>& imgs, std::shared_ptr<FrameInfo> frame)> callback);
+    std::function<void(const std::vector<cv::Mat>& imgs,
+                       std::shared_ptr<FrameInfo> frame,
+                       const std::vector<DetBox3D>& boxes)> callback);
 };

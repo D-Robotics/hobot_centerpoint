@@ -12,6 +12,7 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(OpenCV 4 REQUIRED)
 
 message("CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}")
@@ -94,6 +95,7 @@ endif()
 ament_target_dependencies(${PROJECT_NAME} 
   rclcpp 
   sensor_msgs 
+  std_msgs
   OpenCV
 )
 

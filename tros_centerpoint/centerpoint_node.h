@@ -14,9 +14,13 @@
 
 #include <fstream>
 
+#include <string>
+#include <vector>
+
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/image.hpp"
 #include "sensor_msgs/msg/compressed_image.hpp"
+#include "std_msgs/msg/string.hpp"
 
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -44,10 +48,18 @@ private:
   rclcpp::Publisher<sensor_msgs::msg::CompressedImage>::SharedPtr
     ros_publisher_compressed_ = nullptr;
 
+  // SDK 扩展: 结构化检测结果 ({"type":"boxes",...}) 供 viewer 使用
+  std::string boxes_topic_ = "/centerpoint_boxes_json";
+  double boxes_score_threshold_ = 0.4;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr
+    boxes_publisher_ = nullptr;
+
   bool save_image_ = false;
   std::string path_ = "./render";
 
   AIWrapper ai_wrapper_;
 
-  void GetRenderImgs(const std::vector<cv::Mat>& imgs, std::shared_ptr<FrameInfo> frame);
+  void GetRenderImgs(const std::vector<cv::Mat>& imgs,
+                     std::shared_ptr<FrameInfo> frame,
+                     const std::vector<DetBox3D>& boxes);
 };

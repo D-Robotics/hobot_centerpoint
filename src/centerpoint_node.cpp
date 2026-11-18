@@ -33,6 +33,10 @@ CenterPointNode::CenterPointNode(int argcc, char **argvv) : Node("centerpoint_no
 
   ros_publisher_compressed_ = this->create_publisher<sensor_msgs::msg::CompressedImage>(
       topic_name_, 10);
+  boxes_score_threshold_ = this->declare_parameter(
+      "boxes_score_threshold", 0.4);  // 与渲染图 draw_lidar3d 的门槛一致
+  boxes_publisher_ = this->create_publisher<std_msgs::msg::String>(
+      boxes_topic_, 10);
 
   std::vector<std::string> argv = {"bin", "--config_file=" + config_file_, "--glog_level=" + std::to_string(glog_level_)};
   int argc = 3;
@@ -42,7 +46,8 @@ CenterPointNode::CenterPointNode(int argcc, char **argvv) : Node("centerpoint_no
   }
   ai_wrapper_.Init(argc, argv_char);
   ai_wrapper_.SetOutputCallback(
-    std::bind(&CenterPointNode::GetRenderImgs, this, std::placeholders::_1, std::placeholders::_2));
+    std::bind(&CenterPointNode::GetRenderImgs, this, std::placeholders::_1,
+              std::placeholders::_2, std::placeholders::_3));
   ai_wrapper_.Start();
 }
 
@@ -51,7 +56,9 @@ CenterPointNode::~CenterPointNode() {
   ai_wrapper_.Stop();
 }
 
-void CenterPointNode::GetRenderImgs(const std::vector<cv::Mat>& imgs, std::shared_ptr<FrameInfo> frame) {
+void CenterPointNode::GetRenderImgs(const std::vector<cv::Mat>& imgs,
+                                    std::shared_ptr<FrameInfo> frame,
+                                    const std::vector<DetBox3D>& boxes) {
   RCLCPP_INFO(this->get_logger(),
     "Get render imgs size: %ld, frame_id: %d, duration ms infer: %.2f, postp: %.2f, prep: %.2f",
     imgs.size(),
@@ -97,5 +104,46 @@ void CenterPointNode::GetRenderImgs(const std::vector<cv::Mat>& imgs, std::share
                 msg->format.data(),
                 topic_name_.data());
     ros_publisher_compressed_->publish(std::move(msg));
+  }
+
+  // SDK 扩展: 结构化检测结果发布 ({"type":"boxes",...}), viewer 3D 线框消费
+  if (boxes_publisher_ && !boxes.empty()) {
+    std::string json = "{\"type\":\"boxes\",\"boxes\":[";
+    char buf[160];
+    int drawn = 0;
+    for (size_t i = 0; i < boxes.size(); ++i) {
+      const auto &b = boxes[i];
+      if (b.score < boxes_score_threshold_) continue;
+      // x,y 为中心, z 为底面 -> 转 viewer 约定的框中心 z
+      // snprintf(buf, sizeof(buf),
+      //          "%s{\"x\":%.2f,\"y\":%.2f,\"z\":%.2f,\"w\":%.2f,"
+      //          "\"l\":%.2f,\"h\":%.2f,\"yaw\":%.3f,\"score\":%.2f,"
+      //          "\"group\":%d}",
+      //          drawn ? "," : "", b.x, b.y, b.z + b.h / 2.0f, b.w, b.l, b.h,
+      //          b.yaw, b.score, b.label);
+      snprintf(buf, sizeof(buf),
+              "%s{\"x\":%.2f,\"y\":%.2f,\"z\":%.2f,\"w\":%.2f,"
+              "\"l\":%.2f,\"h\":%.2f,\"yaw\":%.3f,\"score\":%.2f,"
+              "\"group\":%d}",
+              drawn ? "," : "",
+              b.x,               // y' = y
+              -b.y,              // z' = -x
+              b.z + b.h / 2.0f,  // x' = z
+              b.w,
+              b.l,
+              b.h,
+              b.yaw - M_PI / 2.0f,  // yaw' = yaw + pi/2
+              b.score,
+              b.label);
+      ++drawn;
+      json += buf;
+    }
+    json += "]}";
+    std_msgs::msg::String m;
+    m.data = std::move(json);
+    boxes_publisher_->publish(m);
+    RCLCPP_INFO_THROTTLE(this->get_logger(), *this->get_clock(), 5000,
+                "Publish boxes msg: %zu boxes (score>=%.2f), topic: %s",
+                drawn, boxes_score_threshold_, boxes_topic_.c_str());
   }
 }
